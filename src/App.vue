@@ -82,6 +82,49 @@
           </v-list>
         </v-card>
       </v-container>
+      <v-dialog
+          v-model="winner"
+          transition="dialog-bottom-transition"
+          max-width="500"
+          persistent
+      >
+        <v-card>
+          <v-toolbar
+              :color="getColor(winner)"
+              dark
+          >
+            Player {{ parseInt(winner) + 1 }} Wins!
+          </v-toolbar>
+
+          <v-card-text class="pt-7">
+            <div>Final Scores:</div>
+            <div
+                v-for="(score, key) in scores"
+                :key="key"
+            >
+              <span
+                  :class="getColor(key) + '--text'"
+              >
+                Player {{ parseInt(key) + 1 }}:
+              </span>
+              {{ score }}
+              <template v-if="score <= 60">Super Skunked :(</template>
+              <template v-else-if="score <= 90">Skunked</template>
+            </div>
+          </v-card-text>
+
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn
+                color="primary"
+                text
+                @click="reset"
+            >
+              New Game
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
@@ -122,6 +165,25 @@ export default {
       }
 
       return rtv;
+    },
+    scores() {
+      const scores = {};
+      this.gameStore.moves.forEach(move => {
+        scores[move.player] = (scores[move.player] || 0) + move.move;
+      });
+      return scores;
+    },
+    winner() {
+      let winner = null;
+      Object.keys(this.scores).forEach(key => {
+        if (this.scores[key] >= 120)
+          winner = parseInt(key);
+      });
+
+      if (winner !== null)
+        return winner + "";
+
+      return false;
     }
   },
   methods: {

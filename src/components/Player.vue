@@ -8,12 +8,12 @@
   >
     <div class="text-h6 white--text">Player {{ index + 1 }}</div>
     <div class="score white--text mt-2">
-      <div>{{ score }} / 125</div>
+      <div>{{ score }} / 120</div>
       <v-slider
           hide-details
           v-model="score"
           min="0"
-          max="125"
+          max="120"
           disabled
           color="white"
           class="mb-2"
